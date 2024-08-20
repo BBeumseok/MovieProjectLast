@@ -73,3 +73,9 @@
     border: none;
     border-radius: 5px;
 }
+/* 입력 필드가 포커스될 때의 스타일 */
+
+.input:focus {
+    outline: none;
+    border: 1px solid #3a3a3a;
+}
