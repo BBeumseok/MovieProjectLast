@@ -38,8 +38,13 @@ const Profile: React.FC = () => {
             if (response.data) {
                 return URL.createObjectURL(response.data);
             }
-        } catch (error) {
+        } catch (error: any) {
+            if (error.response?.status === 404) {
+                // 파일이 없어서 발생한 에러인 경우 무시
+                console.log("프로필 사진이 존재하지 않습니다.");
+            } else {
             console.error("이미지 조회 실패", error);
+            }
         }
         return "/profile/basic.png";
     }, []);
