@@ -13,7 +13,11 @@ interface PostListProps {
   onDeletePost: () => void;
 }
 
-const PostList: React.FC<PostListProps> = ({ posts, setPosts, onDeletePost }) => {
+const PostList: React.FC<PostListProps> = ({
+  posts,
+  setPosts,
+  onDeletePost,
+}) => {
   const { memberNo } = useAuth();
   const [expandedPost, setExpandedPost] = useState<number | null>(null);
   const [displayedPosts, setDisplayedPosts] = useState<PostDetails[]>([]);
@@ -69,10 +73,16 @@ const PostList: React.FC<PostListProps> = ({ posts, setPosts, onDeletePost }) =>
     setExpandedPost(expandedPost === postId ? null : postId);
   };
 
+  // 수정된 부분 start
   const removeBasePath = (filePath: string) => {
-    const basePathToRemove = "C:\\Users\\tjoeun\\IdeaProjects\\AWS24-MovieProject\\frontend\\public\\";
-    return filePath.replace(basePathToRemove, "");
+    const basePathToRemove =
+      "C:\\teamproject\\MovieProjectLast\\frontend\\public\\profile\\";
+    console.log("Original path:", filePath);
+    const newPath = filePath.replace(basePathToRemove, "");
+    console.log("New path:", newPath);
+    return newPath;
   };
+  // 수정된 부분 end
 
   const handleDeletePost = async (postId: number) => {
     try {
@@ -91,7 +101,9 @@ const PostList: React.FC<PostListProps> = ({ posts, setPosts, onDeletePost }) =>
         {displayedPosts.map((post) => (
           <motion.div
             key={post.postId}
-            className={`${styles.post} ${expandedPost === post.postId ? styles.expanded : ""}`}
+            className={`${styles.post} ${
+              expandedPost === post.postId ? styles.expanded : ""
+            }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -100,12 +112,20 @@ const PostList: React.FC<PostListProps> = ({ posts, setPosts, onDeletePost }) =>
             <div className={styles.postHeader}>
               {renderStars(post.ratingStar)}
             </div>
+            {/* 추가한 부분 start */}
             <div className={styles.profileImage}>
-              <img src={`/${removeBasePath(post.filePath)}`} alt="Post Image" className={styles.profileImage} />
+              {console.log(
+                "Image path:",
+                `/profile/${removeBasePath(post.filePath)}`
+              )}
+              <img
+                src={`/profile/${removeBasePath(post.filePath)}`}
+                alt="Profile Image"
+                className={styles.profileImage}
+              />
             </div>
-            <div className={styles.postNick}>
-              {post.memberNick}
-            </div>
+            {/* 추가한 부분 end */}
+            <div className={styles.postNick}>{post.memberNick}</div>
             <div
               className={`${styles.postContent} ${styles.cursorPointer}`}
               onClick={() => toggleExpand(post.postId)}
@@ -113,8 +133,8 @@ const PostList: React.FC<PostListProps> = ({ posts, setPosts, onDeletePost }) =>
               {expandedPost === post.postId
                 ? post.postContent
                 : post.postContent
-                  ? post.postContent.split("\n")[0]
-                  : ""}
+                ? post.postContent.split("\n")[0]
+                : ""}
             </div>
             <div className={styles.postFooter}>
               <div>{post.regDate}</div>
