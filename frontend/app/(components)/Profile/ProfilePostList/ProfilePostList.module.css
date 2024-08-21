@@ -1,5 +1,7 @@
 .postsList {
     flex:1;
+    height: 600px;
+    overflow-y: auto;
 }
 .post {
     background-color: #444;
