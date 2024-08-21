@@ -55,6 +55,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
 
     // 프사 변경
     const handleProfileImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        console.log("프로필 사진 변경 시작 !!!");
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             setFile(file);
@@ -69,18 +70,20 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
                     headers: { "Content-Type": "multipart/form-data" },
                 });
                 await updateProfileImage(member.memberNo);
+                console.log("프로필 사진 변경 성공 !!!")
             } catch (error) {
-                console.error("이미지 업로드 실패", error);
+                console.error("프로필 사진 변경 실패 ...", error);
             }
         }
     };
     // 프사 삭제
     const handleProfileImageDelete = async () => {
+        console.log("기존 프로필 사진 삭제 시작 !!!");
         try {
             await axios.delete(`/api/image/delete/${member?.memberNo}`);
             setProfileImagePath("/profile/basic.png");
         } catch (error) {
-            console.error("이미지 삭제 실패", error);
+            console.error("기존 프로필 사진 삭제 실패 ...", error);
         }
     };
     // form 입력 값 처리
@@ -102,24 +105,28 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
     };
     // '개인정보 수정' 버튼
     const handleUpdateProfile = () => {
-        console.log("업데이트 시작!! memberNo : "+member.memberNo)
+        console.log("개인정보 수정 시작 !!! memberNo : "+member.memberNo);
         setIsEditing(true);
     };
     // '수정 완료' 버튼
     const handleSubmit = async (e: FormEvent) => {
+        console.log("개인정보 수정 입력 값 받았다 !!!");
         e.preventDefault();
         const validationErrors = validateForm();
         // 현재 비밀번호 입력 했니?
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
+            console.log("현재 비밀번호 입력 안함 !!!");
             return;
         }
         // 닉네임 안건들었으면 중복체크 안해도 걍 넘어가도록 설정
         if(updateForm.memberNick === member.memberNick){
+            console.log("닉네임 바꾸지 않음 !!!");
             setIsNicknameChecked(true);
             setIsNicknameDuplicate(false);
         }else {
             if (!isNicknameChecked || isNicknameDuplicate) {
+                console.log("닉네임 바꿨으면 중복 체크 필요 !!!");
                 alert("닉네임 중복 체크를 해주세요.");
                 return;
             }
@@ -138,6 +145,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
                 ...updateData,
                 memberPw: newPassword || currentPassword
             };
+            console.log("서버로 데이터 보내기 !!! : ");
             // 앞에 다 정상이면 백엔드 서버로 보내서 수정
             const { data } = await axios.put<{ message: string; member: Member }>(
                 "/api/member/update",
@@ -148,7 +156,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
                     credentials: "include",
                     }
                 );
-
+            console.log(data.message);
             alert(data.message); // 서버에서 오는 완료 or 실패 메시지
 
             // 수정 후 입력칸 디폴트 값을 변경된 값으로 변경, 패스워드는 빈칸 유지
@@ -161,6 +169,8 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
                 newPassword: '',
                 confirmNewPassword: '',
             });
+            console.log("개인정보 수정 끝 !!! ");
+
             // 수정 끝
             setErrors({});
             setIsEditing(false);
@@ -170,7 +180,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 console.error("서버 응답 에러:", error.response.data);
-                alert("프로필 업데이트 중 오류가 발생했습니다.");
+                alert("개인정보 수정 중 오류가 발생했습니다.");
                 } else {
                 console.error("예상치 못한 에러:", error);
                 alert("예상치 못한 오류가 발생했습니다.");
@@ -178,10 +188,13 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
         }
     };
     // 회원 탈퇴 기능
-    const handleDelete = async (memberNo: number) => {
+    const handleDelete = async () => {
+        console.log("회원 탈퇴 시작 !!!")
         try {
             const isConfirmed = window.confirm("정말로 회원정보를 삭제하시겠습니까?");
-            if (!isConfirmed) return;
+            if (!isConfirmed) {console.log("회원 탈퇴 취소 !!!"); return;}
+
+            const memberNo = member.memberNo;
 
             await axios.delete<{ message:string }>(
                 `/api/member/delete/${memberNo}`,
@@ -191,6 +204,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
                     credentials: "include",
                 }
             );
+            console.log("회원 탈퇴 완료 !!!");
             alert("회원 탈퇴가 완료되었습니다.");
             logout();
         } catch (error) {
@@ -210,6 +224,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
     };
     // '닫기' 버튼, 누르면 초기화
     const handleCancelEdit = () => {
+        console.log("개인정보 수정 취소 !!!")
         setUpdateForm({
             memberEmail: member.memberEmail,
             memberName: member.memberName,
@@ -225,8 +240,10 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
     };
     // '닉네임 중복 체크' 버튼
     const handleNicknameCheck = async () => {
+        console.log("닉네임 중복 체크 !!!")
         // 안바꿨으면 넘어감
         if (updateForm.memberNick === member.memberNick){
+            console.log("닉네임 변경하지 않음 !!!")
             setIsNicknameChecked(true);
             setIsNicknameDuplicate(false);
         }
@@ -235,11 +252,9 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
             const isDuplicate = await checkNicknameDuplicate(updateForm.memberNick);
             setIsNicknameDuplicate(isDuplicate);
             setIsNicknameChecked(true);
+            if(isDuplicate){console.log("닉네임 중복됨");}
+            else{console.log("닉네임 사용 가능");}
         }
-    };
-    // '회원 탈퇴' 버튼
-    const handleDeleteClick = () => {
-        handleDelete(member.memberNo);
     };
 
     return (
@@ -327,7 +342,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
                     닫기
                 </button>
             )}
-            <button className={styles.button} onClick={handleDeleteClick}>
+            <button className={styles.button} onClick={handleDelete}>
                 회원 탈퇴
             </button>
         </div>
