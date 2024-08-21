@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import styles from "./ProfilePostList.module.css";
 import { PostDetails } from "@/(types)/types";
+import Link from "next/link";
 
 interface PostListProps {
     posts: PostDetails[];
@@ -49,11 +50,11 @@ const ProfilePostList: React.FC<PostListProps> = ({ posts }) => {
             className={styles.postsList}
             ref={containerRef}
             onScroll={handleScroll}
-            style={{ height: '400px', overflowY: 'auto' }}
         >
             <div style={{ height: `${posts.length * (POST_HEIGHT + POST_MARGIN)}px`, position: 'relative' }}>
+
                 {visiblePosts.map((post, index) => (
-                    <div
+                    <Link href={`/movies/details/${post.movieId}`}
                         key={post.postId}
                         className={`${styles.post} ${expandedPost === post.postId ? styles.expanded : ""}`}
                         onClick={() => toggleExpand(post.postId)}
@@ -85,7 +86,7 @@ const ProfilePostList: React.FC<PostListProps> = ({ posts }) => {
                         <div className={styles.postDate}>
                             {post.regDate}
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>
