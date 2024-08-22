@@ -75,7 +75,7 @@ a {
   --background-dark: rgb(21, 21, 20);
 
   --text-light: #333333;
-  /*--text-dark: #ffffff;*/
+  /* --text-dark: #ffffff; */
 
   --input-background-light: rgb(85, 85, 85);
   --input-background-dark: #555555;
@@ -87,9 +87,18 @@ a {
   /*라이트모드 배경 (모달포함)*/
   --background: var(--background-light);
   /*라이트모드 텍스트 색상 */
-  --text: var(--text-light);
+  --text: #ffffff; /* 텍스트 화이트로 수정*/
   /*모달 텍스트창 색*/
   --input-background: var(--input-background-light);
+}
+
+.post-button {
+  color: #ffffff; /* 게시글 버튼 화이트 변경 */
+}
+
+/* 라이트 모드 게시글 버튼 수정 */
+[data-theme="light"] .post-button {
+  color: #ffffff !important;
 }
 
 [data-theme="dark"] {
@@ -102,6 +111,10 @@ body {
   background-color: var(--background);
   color: var(--text);
   transition: background-color 0.3s, color 0.3s;
+}
+
+.post-button {
+  color: #ffffff; /* White text for the post button */
 }
 
 ::-webkit-scrollbar {
@@ -141,13 +154,10 @@ body {
 }
 
 @font-face {
-  font-family: 'cyber';
+  font-family: "cyber";
   font-style: normal;
-  src: url('/fonts/Cyberpunk.ttf') format('truetype');
+  src: url("/fonts/Cyberpunk.ttf") format("truetype");
 }
-
-
-
 
 /* body {
   font-family: 'Arial', sans-serif;
