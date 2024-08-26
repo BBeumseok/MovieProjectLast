@@ -140,7 +140,7 @@ public class MemberController {
                     memberDTO.getMemberNick(), memberDTO.getMemberEmail());
 
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "회원 정보 업데이트가 성공하였습니다. !!!");
+            response.put("message", "회원 정보 업데이트가 성공하였습니다 !!!");
             response.put("member", memberDTO);
 
             return ResponseEntity.ok(response);

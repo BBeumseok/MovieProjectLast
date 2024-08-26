@@ -22,7 +22,7 @@ const Profile: React.FC = () => {
     const [posts, setPosts] = useState<PostDetails[]>([]);
     const [movies, setMovies] = useState<MovieDetails[]>([]);
     const [profileImageUrl, setProfileImageUrl] = useState<string>("/profile/basic.png");
-
+    const [triggerReload, setTriggerReload] = useState(false); // 리렌더링을 위한 상태
 
     const updateProfileImage = useCallback(async (memberNo: number) => {
         const newImageUrl = await fetchImage(memberNo);
@@ -56,6 +56,7 @@ const Profile: React.FC = () => {
                 setMember(data);
 
                 const likedMovies = await getLikedMovies(data.memberNo);
+
                 const postData = await getPostsByMemberNo(data.memberNo);
                 setPosts(postData);
 
@@ -66,16 +67,6 @@ const Profile: React.FC = () => {
                 const movieDetails = await Promise.all(movieDetailsPromises);
                 setMovies(movieDetails.filter((movie): movie is MovieDetails => movie !== null));
 
-                // 포스트에 해당하는 영화 정보도 가져옵니다
-                const postMovieIds = [...new Set(postData.map(post => post.movieId))];
-                const postMovieDetailsPromises = postMovieIds.map(movieId => getMovieByMovieId(movieId));
-                const postMovieDetails = await Promise.all(postMovieDetailsPromises);
-                setMovies(prevMovies => [
-                    ...prevMovies,
-                    ...postMovieDetails.filter((movie): movie is MovieDetails =>
-                        movie !== null && !prevMovies.some(m => m.id === movie.id)
-                    )
-                ]);
             } catch (error) {
                 console.error('데이터 가져오기 실패', error);
             }
@@ -84,12 +75,15 @@ const Profile: React.FC = () => {
         if (isLoggedIn) {
             fetchMemberDetails();
         }
-    }, [isLoggedIn, fetchImage]);
-
+    }, [isLoggedIn, fetchImage, triggerReload]);
 
     if (!isLoggedIn) {
         return null;
     }
+
+    const handleReload = () => {
+        setTriggerReload(prev => !prev); // 상태를 변경하여 리렌더링을 트리거
+    };
 
     return (
         <div className={styles.container}>
@@ -105,9 +99,12 @@ const Profile: React.FC = () => {
                 <div className={styles.contentSection}>
                     <div className={styles.section}>
                         <h2 className={styles.sectionTitle}>나의 리뷰</h2>
-                            <ProfilePostList posts={posts}/>
+                            <ProfilePostList posts={posts}
+                                             onProfileUpdate={handleReload}/>
                     </div>
-                    <LikeList movies={movies}/>
+                    <LikeList movies={movies}
+                              onProfileUpdate={handleReload}
+                    />
                 </div>
             </div>
         </div>

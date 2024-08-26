@@ -1,18 +1,24 @@
-import React, { useRef, useState, useEffect } from 'react';
-import Link from 'next/link';
-import { MovieDetails } from "@/(types)/types";
+import React, {useRef, useState, useEffect, useCallback} from 'react';
+import {MovieDetails} from "@/(types)/types";
 import styles from "./LikeList.module.css";
+import {usePathname, useRouter} from "next/navigation";
 
+// Profile.tsx 에서 상속받은 것
 interface LikeListProps {
-    movies: MovieDetails[] | null;
+    movies: MovieDetails[] | null,
+    onProfileUpdate: () => void
 }
 
-const LikeList: React.FC<LikeListProps> = ({ movies }) => {
+const LikeList: React.FC<LikeListProps> = ({movies, onProfileUpdate}) => {
     const sliderRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
+    const router = useRouter();
+    const pathname = usePathname();
+    const [shouldUpdate, setShouldUpdate] = useState(false);
 
+    // 스크롤 관련 -
     const handleMouseDown = (e: React.MouseEvent) => {
         setIsDragging(true);
         setStartX(e.pageX - (sliderRef.current?.offsetLeft || 0));
@@ -51,7 +57,7 @@ const LikeList: React.FC<LikeListProps> = ({ movies }) => {
     useEffect(() => {
         const slider = sliderRef.current;
         if (slider) {
-            slider.addEventListener('wheel', handleWheel, { passive: false });
+            slider.addEventListener('wheel', handleWheel, {passive: false});
         }
 
         return () => {
@@ -60,6 +66,31 @@ const LikeList: React.FC<LikeListProps> = ({ movies }) => {
             }
         };
     }, []);
+
+    // 영화 포스터 누르면 영화 정보 페이지로 이동
+    const handleMovieClick = useCallback((movie: MovieDetails) => {
+        console.log("Profile -> LikeList 영화 정보, 무비아이디 : "+movie.id);
+        router.push(`/movies/details/${movie.id}`);
+    }, [router]);
+
+    // 다시 Profile 돌아오면 찜/댓글 수정 사항이 있을 경우 최신화 준비
+    useEffect(() => {
+        console.log("LikeList 영화 정보 -> Profile , 최신화 준비");
+        if (pathname === '/member/profile') {
+            setShouldUpdate(true);
+            console.log("setShouldUpdate?1 : ", shouldUpdate);
+        }
+    }, [pathname]);
+
+    // 최신화, 순환참조를 방지하기 위해 상태 플래그(Set) 이용
+    useEffect(() => {
+        console.log("LikeList 영화 정보 -> Profile , 최신화");
+        if (shouldUpdate && onProfileUpdate) {
+            onProfileUpdate();
+            setShouldUpdate(false);
+            console.log("setShouldUpdate?2 : ", shouldUpdate);
+        }
+    }, [shouldUpdate, onProfileUpdate]);
 
     return (
         <div className={styles.section}>
@@ -74,14 +105,12 @@ const LikeList: React.FC<LikeListProps> = ({ movies }) => {
             >
                 <div className={styles.movieItems}>
                     {movies !== null && movies.map((movie) => (
-                        <div key={movie.id} className={styles.movieItem}>
-                            <Link href={`/movies/details/${movie.id}`}>
+                        <div key={movie.id} className={styles.movieItem} onClick={() => handleMovieClick(movie)}>
                                 <img
                                     src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`}
                                     alt={`Poster for ${movie.title}`}
                                     className={styles.movieImg}
                                 />
-                            </Link>
                         </div>
                     ))}
                 </div>

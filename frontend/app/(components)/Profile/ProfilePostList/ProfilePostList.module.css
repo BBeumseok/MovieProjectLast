@@ -24,17 +24,10 @@
 .postBody {
     display: flex;
     align-items: center;
+    margin-right: 20px;
 }
 .expanded .postContent {
     white-space: pre-wrap;
-}
-.postNick {
-    width: 80px;
-    margin-right: 10px;
-    margin-left: 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .postMovieTitle {
@@ -43,6 +36,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    width: 150px;
+    font-weight: bold;
 }
 
 .postContent {
@@ -61,4 +56,19 @@
 }
 .postDate {
     padding-left: 1rem;
+}
+
+.deleteButton {
+    color: aqua;
+    font-size: 2rem;
+    margin-left: 6px;
+    margin-right: -7px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    display: flex;
+    align-items: center;
+}
+
+.cursorPointer {
+    cursor: pointer;
 }
