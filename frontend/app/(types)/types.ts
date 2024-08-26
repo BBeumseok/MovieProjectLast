@@ -48,4 +48,5 @@ export interface Errors {
 export interface Likes {
     movieId: number;
     movieTitle: string;
+    liked: boolean;
 }

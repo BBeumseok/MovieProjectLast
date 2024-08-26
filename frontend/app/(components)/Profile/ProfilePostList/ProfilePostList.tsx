@@ -3,21 +3,26 @@ import { FaRegStar, FaStar } from "react-icons/fa";
 import styles from "./ProfilePostList.module.css";
 import { PostDetails } from "@/(types)/types";
 import Link from "next/link";
+import {MdDelete} from "react-icons/md";
+import {deletePost} from "@/_Service/PostService";
 
+// Profile.tsx 에서 상속받은 것
 interface PostListProps {
     posts: PostDetails[];
+    onProfileUpdate: () => void
 }
 
 const POSTS_PER_PAGE = 10;
 const POST_HEIGHT = 55;
 const POST_MARGIN = 16;
 
-const ProfilePostList: React.FC<PostListProps> = ({ posts }) => {
+const ProfilePostList: React.FC<PostListProps> = ({  posts,
+                                                      onProfileUpdate}) => {
     const [visiblePosts, setVisiblePosts] = useState<PostDetails[]>([]);
     const [startIndex, setStartIndex] = useState(0);
-    const [expandedPost, setExpandedPost] = useState<number | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
+    // 스크롤 관련 -
     const updateVisiblePosts = useCallback(() => {
         if (containerRef.current) {
             const scrollTop = containerRef.current.scrollTop;
@@ -35,15 +40,22 @@ const ProfilePostList: React.FC<PostListProps> = ({ posts }) => {
         updateVisiblePosts();
     }, [updateVisiblePosts]);
 
+    // 별점 표기
     const renderStars = useCallback((ratingStar: number) => {
         return Array.from({ length: 5 }, (_, i) =>
             i < ratingStar ? <FaStar key={i} className={styles.star} /> : <FaRegStar key={i} className={styles.star} />
         );
     }, []);
 
-    const toggleExpand = useCallback((postId: number) => {
-        setExpandedPost(prevId => prevId === postId ? null : postId);
-    }, []);
+    // 댓글 삭제
+    const handleDeletePost = async (postId: number) => {
+        try {
+            await deletePost(postId);
+            onProfileUpdate();
+        } catch (error) {
+            console.error("댓글 삭제 실패 : ", error);
+        }
+    };
 
     return (
         <div
@@ -51,42 +63,46 @@ const ProfilePostList: React.FC<PostListProps> = ({ posts }) => {
             ref={containerRef}
             onScroll={handleScroll}
         >
-            <div style={{ height: `${posts.length * (POST_HEIGHT + POST_MARGIN)}px`, position: 'relative' }}>
+            <div style={{height: `${posts.length * (POST_HEIGHT + POST_MARGIN)}px`, position: 'relative'}}>
 
+                {/*상속받은 post.movieId 기준으로 나열*/}
                 {visiblePosts.map((post, index) => (
-                    <Link href={`/movies/details/${post.movieId}`}
-                        key={post.postId}
-                        className={`${styles.post} ${expandedPost === post.postId ? styles.expanded : ""}`}
-                        onClick={() => toggleExpand(post.postId)}
-                        style={{
-                            position: 'absolute',
-                            top: `${(startIndex + index) * (POST_HEIGHT + POST_MARGIN)}px`,
-                            height: `${POST_HEIGHT}px`,
-                            width: 'calc(100%)',
-                            flex: 1
-                        }}
+                    <div key={post.postId}
+                         className={`${styles.post}`}
+                         style={{
+                             position: 'absolute',
+                             top: `${(startIndex + index) * (POST_HEIGHT + POST_MARGIN)}px`,
+                             height: `${POST_HEIGHT}px`,
+                             width: 'calc(100%)',
+                             flex: 1
+                         }}
                     >
-                        <div className={styles.postMovieTitle}>
+                        <Link href={`/movies/details/${post.movieId}`}
+                            className={styles.postMovieTitle}>
                             <span>{post.movieTitle}</span>
-                        </div>
+                        </Link>
 
                         <div className={styles.postHeader}>
                             {renderStars(post.ratingStar)}
-                            <div className={styles.postNick}>
-                                {post.memberNick}
-                            </div>
                         </div>
+
                         <div className={styles.postContent}>
-                            {expandedPost === post.postId
+                            {post.postId
                                 ? post.postContent
                                 : post.postContent
                                     ? post.postContent.split("\n")[0]
                                     : ""}
                         </div>
+
                         <div className={styles.postDate}>
                             {post.regDate}
                         </div>
-                    </Link>
+
+                        <MdDelete
+                            onClick={() => handleDeletePost(post.postId)}
+                            className={`${styles.deleteButton} ${styles.cursorPointer}`}
+                        />
+                    </div>
                 ))}
             </div>
         </div>
