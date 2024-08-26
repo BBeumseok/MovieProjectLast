@@ -82,21 +82,24 @@ const ProfilePostList: React.FC<PostListProps> = ({  posts,
                             <span>{post.movieTitle}</span>
                         </Link>
 
-                        <div className={styles.postHeader}>
+                        <Link href={`/movies/details/${post.movieId}`}
+                              className={styles.postHeader}>
                             {renderStars(post.ratingStar)}
-                        </div>
+                        </Link>
 
-                        <div className={styles.postContent}>
+                        <Link href={`/movies/details/${post.movieId}`}
+                              className={styles.postContent}>
                             {post.postId
                                 ? post.postContent
                                 : post.postContent
                                     ? post.postContent.split("\n")[0]
                                     : ""}
-                        </div>
+                        </Link>
 
-                        <div className={styles.postDate}>
+                        <Link href={`/movies/details/${post.movieId}`}
+                              className={styles.postDate}>
                             {post.regDate}
-                        </div>
+                        </Link>
 
                         <MdDelete
                             onClick={() => handleDeletePost(post.postId)}
