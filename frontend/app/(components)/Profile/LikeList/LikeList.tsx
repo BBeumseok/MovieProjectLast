@@ -94,7 +94,7 @@ const LikeList: React.FC<LikeListProps> = ({movies, onProfileUpdate}) => {
 
     return (
         <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>좋아요 한 영화</h2>
+            <h2 className={styles.sectionTitle}>Liked Movies</h2>
             <div
                 className={styles.sliderWrapper}
                 ref={sliderRef}

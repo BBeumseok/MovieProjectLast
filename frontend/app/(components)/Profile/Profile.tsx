@@ -50,23 +50,24 @@ const Profile: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        // 입장한 사람 데이터 서버에서 가져오기
         const fetchMemberDetails = async () => {
             try {
+                // 개인정보 가져오기
                 const data = await getMemberDetails();
                 setMember(data);
-
+                // 찜한 영화 가져오기
                 const likedMovies = await getLikedMovies(data.memberNo);
-
+                // 내가 쓴 한 줄평 가져오기
                 const postData = await getPostsByMemberNo(data.memberNo);
                 setPosts(postData);
-
+                // 프로필 사진 가져오기
                 const imageUrl = await fetchImage(data.memberNo);
                 setProfileImageUrl(imageUrl);
-
+                // 찜한 영화 id 로 영화 정보 다 가져오기
                 const movieDetailsPromises = likedMovies.map(movieId => getMovieByMovieId(movieId));
                 const movieDetails = await Promise.all(movieDetailsPromises);
                 setMovies(movieDetails.filter((movie): movie is MovieDetails => movie !== null));
-
             } catch (error) {
                 console.error('데이터 가져오기 실패', error);
             }
@@ -80,7 +81,7 @@ const Profile: React.FC = () => {
     if (!isLoggedIn) {
         return null;
     }
-
+    // 최신화하는 함수
     const handleReload = () => {
         setTriggerReload(prev => !prev); // 상태를 변경하여 리렌더링을 트리거
     };
@@ -97,14 +98,10 @@ const Profile: React.FC = () => {
                     updateProfileImage={updateProfileImage}
                 />
                 <div className={styles.contentSection}>
-                    <div className={styles.section}>
-                        <h2 className={styles.sectionTitle}>나의 리뷰</h2>
-                            <ProfilePostList posts={posts}
-                                             onProfileUpdate={handleReload}/>
-                    </div>
+                    <ProfilePostList posts={posts}
+                                     onProfileUpdate={handleReload}/>
                     <LikeList movies={movies}
-                              onProfileUpdate={handleReload}
-                    />
+                              onProfileUpdate={handleReload}/>
                 </div>
             </div>
         </div>
