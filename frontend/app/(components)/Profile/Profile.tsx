@@ -65,7 +65,7 @@ const Profile: React.FC = () => {
                 const imageUrl = await fetchImage(data.memberNo);
                 setProfileImageUrl(imageUrl);
                 // 찜한 영화 id 로 영화 정보 다 가져오기
-                const movieDetailsPromises = likedMovies.map(movieId => getMovieByMovieId(movieId));
+                const movieDetailsPromises = likedMovies.map((movieId: number) => getMovieByMovieId(movieId));
                 const movieDetails = await Promise.all(movieDetailsPromises);
                 setMovies(movieDetails.filter((movie): movie is MovieDetails => movie !== null));
             } catch (error) {

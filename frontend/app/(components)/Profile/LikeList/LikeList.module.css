@@ -47,7 +47,7 @@
 }
 
 .movieImg {
-    width: 100*(23/24)%;
+    width: 100*(23/24);
     height: 287.5px;
     object-fit: cover;
     transition: transform 0.2s ease;
