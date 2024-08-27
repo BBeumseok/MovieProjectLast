@@ -123,7 +123,7 @@ const Join: React.FC = () => {
         <div>
           <input
             type="text"
-            name="memberName"
+            name="memberName"ㅜ
             placeholder="Name"
             value={formData.memberName}
             onChange={handleChange}

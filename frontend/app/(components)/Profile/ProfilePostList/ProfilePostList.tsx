@@ -58,55 +58,59 @@ const ProfilePostList: React.FC<PostListProps> = ({  posts,
     };
 
     return (
-        <div
-            className={styles.postsList}
-            ref={containerRef}
-            onScroll={handleScroll}
-        >
-            <div style={{height: `${posts.length * (POST_HEIGHT + POST_MARGIN)}px`, position: 'relative'}}>
+        <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Review</h2>
+            <hd></hd>
+            <div
+                className={styles.postsList}
+                ref={containerRef}
+                onScroll={handleScroll}
+            >
+                <div style={{height: `${posts.length * (POST_HEIGHT + POST_MARGIN)}px`, position: 'relative'}}>
 
-                {/*상속받은 post.movieId 기준으로 나열*/}
-                {visiblePosts.map((post, index) => (
-                    <div key={post.postId}
-                         className={`${styles.post}`}
-                         style={{
-                             position: 'absolute',
-                             top: `${(startIndex + index) * (POST_HEIGHT + POST_MARGIN)}px`,
-                             height: `${POST_HEIGHT}px`,
-                             width: 'calc(100%)',
-                             flex: 1
-                         }}
-                    >
-                        <Link href={`/movies/details/${post.movieId}`}
-                            className={styles.postMovieTitle}>
-                            <span>{post.movieTitle}</span>
-                        </Link>
+                    {/*상속받은 post.movieId 기준으로 나열*/}
+                    {visiblePosts.map((post, index) => (
+                        <div key={post.postId}
+                             className={`${styles.post}`}
+                             style={{
+                                 position: 'absolute',
+                                 top: `${(startIndex + index) * (POST_HEIGHT + POST_MARGIN)}px`,
+                                 height: `${POST_HEIGHT}px`,
+                                 width: 'calc(100%)',
+                                 flex: 1
+                             }}
+                        >
+                            <Link href={`/movies/details/${post.movieId}`}
+                                  className={styles.postMovieTitle}>
+                                <span>{post.movieTitle}</span>
+                            </Link>
 
-                        <Link href={`/movies/details/${post.movieId}`}
-                              className={styles.postHeader}>
-                            {renderStars(post.ratingStar)}
-                        </Link>
+                            <Link href={`/movies/details/${post.movieId}`}
+                                  className={styles.postHeader}>
+                                {renderStars(post.ratingStar)}
+                            </Link>
 
-                        <Link href={`/movies/details/${post.movieId}`}
-                              className={styles.postContent}>
-                            {post.postId
-                                ? post.postContent
-                                : post.postContent
-                                    ? post.postContent.split("\n")[0]
-                                    : ""}
-                        </Link>
+                            <Link href={`/movies/details/${post.movieId}`}
+                                  className={styles.postContent}>
+                                {post.postId
+                                    ? post.postContent
+                                    : post.postContent
+                                        ? post.postContent.split("\n")[0]
+                                        : ""}
+                            </Link>
 
-                        <Link href={`/movies/details/${post.movieId}`}
-                              className={styles.postDate}>
-                            {post.regDate}
-                        </Link>
+                            <Link href={`/movies/details/${post.movieId}`}
+                                  className={styles.postDate}>
+                                {post.regDate}
+                            </Link>
 
-                        <MdDelete
-                            onClick={() => handleDeletePost(post.postId)}
-                            className={`${styles.deleteButton} ${styles.cursorPointer}`}
-                        />
-                    </div>
-                ))}
+                            <MdDelete
+                                onClick={() => handleDeletePost(post.postId)}
+                                className={`${styles.deleteButton} ${styles.cursorPointer}`}
+                            />
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

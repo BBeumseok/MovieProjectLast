@@ -30,6 +30,17 @@
     white-space: pre-wrap;
 }
 
+.section {
+    /*내가남긴리뷰 좋아요 누른 영화 부분 색상*/
+    background-color: rgba(44, 44, 44, 0.7);
+    /*background-color: var(--background);*/
+    border-radius: 10px;
+    padding: 20px;
+    flex: 1;
+    /* 내용이 넘칠 경우 스크롤바 표시 */
+    overflow-y: auto;
+}
+
 .postMovieTitle {
     margin-right: 10px;
     margin-left: 10px;
@@ -71,4 +82,11 @@
 
 .cursorPointer {
     cursor: pointer;
+}
+
+.sectionTitle {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    z-index: 1;
 }
