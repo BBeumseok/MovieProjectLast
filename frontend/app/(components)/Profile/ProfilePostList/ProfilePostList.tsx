@@ -60,7 +60,6 @@ const ProfilePostList: React.FC<PostListProps> = ({  posts,
     return (
         <div className={styles.section}>
             <h2 className={styles.sectionTitle}>Review</h2>
-            <hd></hd>
             <div
                 className={styles.postsList}
                 ref={containerRef}

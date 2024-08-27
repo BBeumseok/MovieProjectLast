@@ -153,7 +153,6 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
                 {
                     headers: { "Content-Type": "application/json" },
                     withCredentials: true,
-                    credentials: "include",
                     }
                 );
             console.log(data.message);
@@ -201,7 +200,6 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
                 {
                     headers: { "Content-Type": "application/json" },
                     withCredentials: true,
-                    credentials: "include",
                 }
             );
             console.log("회원 탈퇴 완료 !!!");
