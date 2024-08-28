@@ -8,7 +8,10 @@ import {
   updateLikeStatus,
   fetchLikeCounts,
 } from "@/_Service/LikeService";
-import { getVideosByMovieId, getMoviesByMovieId } from "@/_Service/MovieService";
+import {
+  getVideosByMovieId,
+  getMoviesByMovieId,
+} from "@/_Service/MovieService";
 
 interface MovieHeaderProps {
   movie: MovieDetails;
@@ -91,7 +94,7 @@ const MovieHeader: React.FC<MovieHeaderProps> = ({ movie, averageRating }) => {
       setLikesCount(count);
 
       // CustomEvent 디스패치
-      const event = new CustomEvent('refreshMovies');
+      const event = new CustomEvent("refreshMovies");
       window.dispatchEvent(event);
     } catch (err) {
       setError("좋아요 상태 업데이트 실패");
@@ -147,9 +150,14 @@ const MovieHeader: React.FC<MovieHeaderProps> = ({ movie, averageRating }) => {
                 className={`${styles.sliderImage} ${
                   index === currentImageIndex ? styles.active : ""
                 } ${
-                  index === (currentImageIndex - 1 + images.length) % images.length ? styles.prev : ""
+                  index ===
+                  (currentImageIndex - 1 + images.length) % images.length
+                    ? styles.prev
+                    : ""
                 } ${
-                  index === (currentImageIndex + 1) % images.length ? styles.next : ""
+                  index === (currentImageIndex + 1) % images.length
+                    ? styles.next
+                    : ""
                 }`}
               />
             ))}
