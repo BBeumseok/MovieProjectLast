@@ -87,6 +87,7 @@ export default function NowPlayingMovies() {
     setLoadedImages((prevCount) => prevCount + 1);
   };
 
+  // [6] 좋아요 버튼 클릭 핸들러 수정
   const handleLikeClick = async (movieId: string, liked: boolean) => {
     if (!memberNo) {
       console.warn("You must be logged in to like a movie.");
@@ -94,14 +95,15 @@ export default function NowPlayingMovies() {
     }
 
     try {
-      await updateLikeStatus(movieId, !liked);
+      await updateLikeStatus(memberNo, movieId, !liked); // 좋아요 상태 업데이트
       setMovies((prevMovies) =>
         prevMovies.map((movie) =>
           movie.id === movieId
             ? {
                 ...movie,
-                userHasLiked: !liked,
-                likesCount: movie.likesCount + (liked ? -1 : 1),
+
+                userHasLiked: !liked, // 좋아요 상태 반전
+                likesCount: movie.likesCount + (liked ? -1 : 1), // 좋아요 수 업데이트
               }
             : movie
         )
@@ -155,7 +157,8 @@ export default function NowPlayingMovies() {
                   className={`${styles.likeButton} ${
                     movie.userHasLiked ? styles.liked : ""
                   }`}
-                  onClick={() => handleLikeClick(movie.id, movie.userHasLiked)}
+
+                  onClick={() => handleLikeClick(movie.id, movie.userHasLiked)} // [7] 좋아요 버튼 클릭 핸들러 적용
                 >
                   {movie.userHasLiked ? <FaHeart /> : <FaRegHeart />}
                   <span className={styles.likesCount}>{movie.likesCount}</span>
