@@ -101,6 +101,7 @@ export default function NowPlayingMovies() {
           movie.id === movieId
             ? {
                 ...movie,
+
                 userHasLiked: !liked, // 좋아요 상태 반전
                 likesCount: movie.likesCount + (liked ? -1 : 1), // 좋아요 수 업데이트
               }
@@ -156,6 +157,7 @@ export default function NowPlayingMovies() {
                   className={`${styles.likeButton} ${
                     movie.userHasLiked ? styles.liked : ""
                   }`}
+
                   onClick={() => handleLikeClick(movie.id, movie.userHasLiked)} // [7] 좋아요 버튼 클릭 핸들러 적용
                 >
                   {movie.userHasLiked ? <FaHeart /> : <FaRegHeart />}
