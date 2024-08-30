@@ -67,7 +67,7 @@
   height: 100vh; /* 전체 뷰포트 높이를 유지 */
   display: flex;
   flex-direction: column;
-  
+
 }
 
 .content {
@@ -80,6 +80,6 @@
   justify-content: center;
   text-align: center; /* 텍스트를 가운데 정렬 */
   font-family: 'cyber', sans-serif;
-  font-size: 33px; 
+  font-size: 33px;
   color: yellow;
 }

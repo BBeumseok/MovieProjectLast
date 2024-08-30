@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef, useCallback} from "react";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,17 +6,20 @@ import styles from "./PostList.module.css";
 import { PostDetails } from "@/(types)/types";
 import { useAuth } from "@/(context)/AuthContext";
 import { deletePost } from "@/_Service/PostService";
+import { useRouter } from 'next/navigation';
 
 interface PostListProps {
   posts: PostDetails[];
   setPosts: React.Dispatch<React.SetStateAction<PostDetails[]>>; // 부모 컴포넌트로부터 setPosts 받기
   onDeletePost: () => void;
+  closeModal: () => void;
 }
 
 const PostList: React.FC<PostListProps> = ({
   posts,
   setPosts,
   onDeletePost,
+  closeModal
 }) => {
   const { memberNo } = useAuth();
   const [expandedPost, setExpandedPost] = useState<number | null>(null);
@@ -24,6 +27,15 @@ const PostList: React.FC<PostListProps> = ({
   const [postIndex, setPostIndex] = useState(5);
   const observerRef = useRef<HTMLDivElement | null>(null);
   const observer = useRef<IntersectionObserver | null>(null);
+  const router = useRouter();
+
+  const handleClick = useCallback(async (post: PostDetails) => {
+    console.log('포스트멤버닉'+post.memberNick);
+    await closeModal();
+    setTimeout(() => {
+      router.push(`/member/otherProfile?otherNick=${post.memberNick}`);
+    }, 100)
+  }, [closeModal]);
 
   useEffect(() => {
     const initialPosts = posts.slice(0, postIndex);
@@ -125,7 +137,7 @@ const PostList: React.FC<PostListProps> = ({
               />
             </div>
             {/* 추가한 부분 end */}
-            <div className={styles.postNick}>{post.memberNick}</div>
+            <button onClick={() => handleClick(post)} className={styles.postNickButton}>{post.memberNick}</button>
             <div
               className={`${styles.postContent} ${styles.cursorPointer}`}
               onClick={() => toggleExpand(post.postId)}

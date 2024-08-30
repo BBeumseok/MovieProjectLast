@@ -174,6 +174,10 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
             setErrors({});
             setIsEditing(false);
             setIsNicknameChecked(false);
+            setMember(prevForm => ({
+                ...prevForm,
+                memberNick: data.member.memberNick
+            }));
 
         // 업데이트 실패시
         } catch (error) {
