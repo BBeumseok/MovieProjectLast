@@ -1,0 +1,89 @@
+.postsList {
+    flex:1;
+    height: 600px;
+    overflow-y: auto;
+}
+.post {
+    background-color: #444;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.post:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.postHeader,
+.postBody {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+.expanded .postContent {
+    white-space: pre-wrap;
+}
+
+.section {
+    background-color: rgba(44, 44, 44, 0.7);
+    border-radius: 10px;
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.postMovieTitle {
+    margin-right: 10px;
+    margin-left: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 150px;
+    font-weight: bold;
+}
+
+.postContent {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.expanded .postContent {
+    white-space: normal;
+}
+.star {
+    font-size: 1.5rem;
+    color: yellow;
+    margin-right: 0.2rem;
+}
+.postDate {
+    padding-left: 1rem;
+}
+
+.deleteButton {
+    color: aqua;
+    font-size: 2rem;
+    margin-left: 6px;
+    margin-right: -7px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    display: flex;
+    align-items: center;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}
+
+.sectionTitle {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    z-index: 1;
+}

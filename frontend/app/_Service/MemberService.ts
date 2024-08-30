@@ -75,7 +75,6 @@ export const logout = async () => {
           baseURL: 'http://localhost:8000',
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
-          credentials: 'include',
         });
         console.log(response);
         return response.data;
@@ -95,7 +94,6 @@ export const verifyPassword = async (password: string): Promise<boolean> => {
           baseURL: "http://localhost:8000",
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
-          credentials: "include",
         }
     );
     return response.data.isValid;
@@ -114,11 +112,27 @@ export const checkNicknameDuplicate = async (nickname: string): Promise<boolean>
       baseURL: "http://localhost:8000",
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
-      credentials: "include",
     });
     return response.data.isDuplicate;
   } catch (error) {
     console.error("닉네임 중복 체크 실패", error);
     return false;
+  }
+};
+
+// otherProfile 유저 정보 가져오기
+export const getOtherMemberDetails = async (nickname: string | null | undefined): Promise<Member> => {
+  try {
+    const response = await axios.get('/api/member/otherProfile', {
+      params: { nickname },
+      baseURL: 'http://localhost:8000',
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
+    });
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error('남의 프로필 정보 가져오기 실패:', error);
+    throw error;
   }
 };
