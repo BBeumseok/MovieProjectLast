@@ -54,7 +54,7 @@ export const getVideosByMovieId = async (id: number) => {
     console.error("트레일러 요청 실패다 ", error);
     throw error;
   }
-}
+};
 
 export const getMoviesByMovieId = async (id: number) => {
   try {
@@ -66,7 +66,7 @@ export const getMoviesByMovieId = async (id: number) => {
     console.error("이미지 요청 실패다", error);
     throw error;
   }
-}
+};
 
 // 유저가 찜한 무비들 API 가져오기
 export const getLikedMovies = async (memberNo: number) => {
@@ -76,6 +76,7 @@ export const getLikedMovies = async (memberNo: number) => {
     console.log("리스폰스 데이터 !!!!!" + response); // 서버에서 잘 가져왔나 확인
     return response.data;
   } catch (error) {
-    console.error('좋아요 누른 영화 가져오기 실패 !!!', error); // 실패시 에러 로그 출력
+    console.error("좋아요 누른 영화 가져오기 실패 !!!", error); // 실패시 에러 로그 출력
+    throw error;
   }
 };

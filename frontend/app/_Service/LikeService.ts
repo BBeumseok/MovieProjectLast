@@ -43,3 +43,13 @@ export const updateLikeStatus = async (memberNo: number, movieId: number, liked:
     }
 };
 
+export const fetchAverageRating = async (movieId: number): Promise<number> => {
+  try {
+    const response = await axios.get(`/api/movies/${movieId}/averageRating`);
+    console.log("API Response for Average Rating:", response.data); // 응답 확인 로그 추가
+    return response.data.averageRating;
+  } catch (error) {
+    console.error("Error fetching average rating:", error);
+    throw error;
+  }
+};
