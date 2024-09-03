@@ -2,7 +2,13 @@ import React, { useState, useRef, ChangeEvent, FormEvent, useEffect } from 'reac
 import axios from "axios";
 import styles from "./Update.module.css";
 import { Member, Errors, UpdateForm } from "@/(types)/types";
-import { checkNicknameDuplicate, verifyPassword } from "@/_Service/MemberService";
+import {
+    checkNicknameDuplicate,
+    deleteMember,
+    deleteMemberImage,
+    updateMember,
+    verifyPassword
+} from "@/_Service/MemberService";
 import {useAuth} from "@/(context)/AuthContext";
 
 interface UpdateProps {
@@ -65,7 +71,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
             formData.append("memberNo", member?.memberNo?.toString() || "");
 
             try {
-                await handleProfileImageDelete();
+                await handleProfileImageDelete(member);
                 await axios.post("/api/image/upload", formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
@@ -77,14 +83,10 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
         }
     };
     // 프사 삭제
-    const handleProfileImageDelete = async () => {
+    const handleProfileImageDelete = async (member) => {
         console.log("기존 프로필 사진 삭제 시작 !!!");
-        try {
-            await axios.delete(`/api/image/delete/${member?.memberNo}`);
-            setProfileImagePath("/profile/basic.png");
-        } catch (error) {
-            console.error("기존 프로필 사진 삭제 실패 ...", error);
-        }
+        await deleteMemberImage(member);
+        setProfileImagePath("/profile/basic.png");
     };
     // form 입력 값 처리
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -147,14 +149,8 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
             };
             console.log("서버로 데이터 보내기 !!! : ");
             // 앞에 다 정상이면 백엔드 서버로 보내서 수정
-            const { data } = await axios.put<{ message: string; member: Member }>(
-                "/api/member/update",
-                updatePayload,
-                {
-                    headers: { "Content-Type": "application/json" },
-                    withCredentials: true,
-                    }
-                );
+            const data = await updateMember(updatePayload);
+
             console.log(data.message);
             alert(data.message); // 서버에서 오는 완료 or 실패 메시지
 
@@ -199,13 +195,8 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
 
             const memberNo = member.memberNo;
 
-            await axios.delete<{ message:string }>(
-                `/api/member/delete/${memberNo}`,
-                {
-                    headers: { "Content-Type": "application/json" },
-                    withCredentials: true,
-                }
-            );
+            const data = await deleteMember(memberNo);
+
             console.log("회원 탈퇴 완료 !!!");
             alert("회원 탈퇴가 완료되었습니다.");
             logout();
