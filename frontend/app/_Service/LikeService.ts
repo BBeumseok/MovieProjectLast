@@ -1,8 +1,8 @@
-import axios from 'axios';
+import {axiosInstance} from "@/(axiosInstance)/api";
 
 export const fetchLikeStatus = async (memberNo: number, movieId: number) => {
     try {
-        const response = await axios.get('/api/likes/status', {
+        const response = await axiosInstance.get('/likes/status', {
             params: {
                 memberNo,
                 movieId,
@@ -17,7 +17,7 @@ export const fetchLikeStatus = async (memberNo: number, movieId: number) => {
 
 export const fetchLikeCounts = async (movieId: number) => {
     try {
-        const response = await axios.get('/api/likes/likesMovie', {
+        const response = await axiosInstance.get('/likes/likesMovie', {
             params: {
                 movieId: movieId
             }
@@ -32,7 +32,7 @@ export const fetchLikeCounts = async (movieId: number) => {
 
 export const updateLikeStatus = async (memberNo: number, movieId: number, liked: boolean) => {
     try {
-        await axios.post('/api/likes/update', {
+        await axiosInstance.post('/likes/update', {
             memberNo,
             movieId,
             liked,

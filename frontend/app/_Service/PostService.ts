@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { PostDetails } from '../(types)/types';
+import {axiosInstance} from "@/(axiosInstance)/api";
 
 export const getPostsByMovieId = async (movieId: number): Promise<PostDetails[]> => {
     try {
-        const response = await axios.get(`/api/posts/movie/${movieId}`);
+        const response = await axiosInstance.get(`/posts/movie/${movieId}`);
         return response.data;
     } catch (error) {
         console.error("Error fetching posts by movie ID:", error);
@@ -20,7 +21,7 @@ export const regPost = async (content: string, rating: number, movieId: number, 
             memberNick: memberNick
         };
         console.log("Sending post data:", postData);
-        await axios.post('/api/posts/register', postData);
+        await axiosInstance.post('/posts/register', postData);
         console.log("Post submitted successfully");
     } catch (error) {
         console.error("Error submitting post:", error);
@@ -30,7 +31,7 @@ export const regPost = async (content: string, rating: number, movieId: number, 
 
 export const deletePost = async (postId: number) => {
     try {
-      await axios.delete(`/api/posts/delete/${postId}`);
+      await axiosInstance.delete(`/posts/delete/${postId}`);
     } catch (error) {
       console.error("Failed to delete post:", error);
       throw error;
@@ -39,7 +40,7 @@ export const deletePost = async (postId: number) => {
 
 export const getAverageRatingByMovieId = async (movieId: number) => {
     try {
-        const response = await axios.get(`/api/posts/average-rating/${movieId}`);
+        const response = await axiosInstance.get(`/posts/average-rating/${movieId}`);
         return response.data;
       } catch (error) {
         console.error("Error fetching average rating:", error);
@@ -50,7 +51,7 @@ export const getAverageRatingByMovieId = async (movieId: number) => {
 // memberNo 으로 posts 데이터 서버에서 가져오기.
 export const getPostsByMemberNo = async (memberNo: number) => {
     try{
-        const response = await axios.get(`/api/posts/${memberNo}`);
+        const response = await axiosInstance.get(`/posts/${memberNo}`);
         return response.data;
     }catch(error){
         console.log("Error getting posts by memberNo:", error);
