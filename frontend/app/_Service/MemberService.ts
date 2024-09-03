@@ -128,3 +128,32 @@ export const getOtherMemberDetails = async (nickname: string | null | undefined)
     throw error;
   }
 };
+
+export const getMemberImage = async (memberNo: number): Promise<string> => {
+  try {
+    const response = await axios.get(`/api/image/read/${memberNo}`, {
+      responseType: 'blob',
+    });
+
+    if (response.data && response.data.size > 0) {
+      return URL.createObjectURL(response.data);
+    }
+  } catch (error: any) {
+    if (error.response?.status === 404) {
+      // 파일이 없어서 발생한 에러인 경우 무시
+      console.log("프로필 사진이 존재하지 않습니다.");
+    } else {
+      console.error("이미지 조회 실패", error);
+    }
+  }
+  return "/profile/basic.png";
+}
+
+export const deleteMemberImage = async (member) => {
+  try {
+    await axios.delete(`/api/image/delete/${member?.memberNo}`);
+    console.log("기존 프로필 사진 삭제 성공")
+  } catch (error) {
+    console.error("기존 프로필 사진 삭제 실패 ...", error);
+  }
+}

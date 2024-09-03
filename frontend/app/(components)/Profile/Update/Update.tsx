@@ -2,7 +2,13 @@ import React, { useState, useRef, ChangeEvent, FormEvent, useEffect } from 'reac
 import axios from "axios";
 import styles from "./Update.module.css";
 import { Member, Errors, UpdateForm } from "@/(types)/types";
-import {checkNicknameDuplicate, deleteMember, updateMember, verifyPassword} from "@/_Service/MemberService";
+import {
+    checkNicknameDuplicate,
+    deleteMember,
+    deleteMemberImage,
+    updateMember,
+    verifyPassword
+} from "@/_Service/MemberService";
 import {useAuth} from "@/(context)/AuthContext";
 
 interface UpdateProps {
@@ -65,7 +71,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
             formData.append("memberNo", member?.memberNo?.toString() || "");
 
             try {
-                await handleProfileImageDelete();
+                await handleProfileImageDelete(member);
                 await axios.post("/api/image/upload", formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
@@ -77,14 +83,10 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
         }
     };
     // 프사 삭제
-    const handleProfileImageDelete = async () => {
+    const handleProfileImageDelete = async (member) => {
         console.log("기존 프로필 사진 삭제 시작 !!!");
-        try {
-            await axios.delete(`/api/image/delete/${member?.memberNo}`);
-            setProfileImagePath("/profile/basic.png");
-        } catch (error) {
-            console.error("기존 프로필 사진 삭제 실패 ...", error);
-        }
+        await deleteMemberImage(member);
+        setProfileImagePath("/profile/basic.png");
     };
     // form 입력 값 처리
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
