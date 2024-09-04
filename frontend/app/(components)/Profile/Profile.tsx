@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import styles from "./profile.module.css";
+import styles from "./Profile.module.css";
 import { Member, MovieDetails, PostDetails } from "@/(types)/types";
 import { useAuth } from '@/(context)/AuthContext';
 import { getMemberDetails } from "@/_Service/MemberService";

@@ -240,4 +240,25 @@ public class MemberController {
 
         return ResponseEntity.ok().build();
     }
+
+    // 남의 프로필
+    @GetMapping("/otherProfile")
+    public ResponseEntity<?> getOtherMemberDetails(@RequestParam String nickname) {
+        log.info("남의 프로필 입장 !!!!!!!!!!!!!!!");
+        Optional<Member> memberOptional = memberRepository.findByMemberNick(nickname);
+        try {
+            if (memberOptional.isPresent()) {
+                Member member = memberOptional.get();
+                log.info("아더 멤버 정보 : "+member);
+                MemberDTO otherProfileDTO = modelMapper.map(member, MemberDTO.class);
+                log.info("아더 멤버 정보 DTO: {}", otherProfileDTO);
+                return ResponseEntity.ok(otherProfileDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("멤버를 찾을 수 없습니다.");
+            }
+        } catch (Exception e) {
+            log.error("멤버 디테일에 문제가 발생했습니다.", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+    }
 }

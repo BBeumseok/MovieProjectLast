@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef, useCallback} from "react";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,17 +6,21 @@ import styles from "./PostList.module.css";
 import { PostDetails } from "@/(types)/types";
 import { useAuth } from "@/(context)/AuthContext";
 import { deletePost } from "@/_Service/PostService";
+import { useRouter } from 'next/navigation';
+import {getMemberImage} from "@/_Service/MemberService";
 
 interface PostListProps {
   posts: PostDetails[];
   setPosts: React.Dispatch<React.SetStateAction<PostDetails[]>>; // 부모 컴포넌트로부터 setPosts 받기
   onDeletePost: () => void;
+  closeModal: () => void;
 }
 
 const PostList: React.FC<PostListProps> = ({
   posts,
   setPosts,
   onDeletePost,
+  closeModal
 }) => {
   const { memberNo } = useAuth();
   const [expandedPost, setExpandedPost] = useState<number | null>(null);
@@ -24,6 +28,16 @@ const PostList: React.FC<PostListProps> = ({
   const [postIndex, setPostIndex] = useState(5);
   const observerRef = useRef<HTMLDivElement | null>(null);
   const observer = useRef<IntersectionObserver | null>(null);
+  const router = useRouter();
+  const [profileImage, setProfileImage] = useState<{ [key: number]: string | null }>({});
+
+  const handleClick = useCallback(async (post: PostDetails) => {
+    console.log('포스트멤버닉'+post.memberNick);
+    await closeModal();
+    setTimeout(() => {
+      router.push(`/member/otherProfile?otherNick=${post.memberNick}`);
+    }, 100)
+  }, [closeModal]);
 
   useEffect(() => {
     const initialPosts = posts.slice(0, postIndex);
@@ -51,6 +65,43 @@ const PostList: React.FC<PostListProps> = ({
     };
   }, [displayedPosts]);
 
+  const fetchProfileImages = async (posts) => {
+    const images = await Promise.all(
+        posts.map(async (post) => {
+          if (post.memberNo) {
+            try {
+              const image = await getMemberImage(post.memberNo);
+              return { postId: post.postId, image };
+            } catch (error) {
+              console.error(`Error fetching profile image for postId ${post.postId}:`, error);
+              return { postId: post.postId, image: null };
+            }
+          }
+          return { postId: post.postId, image: null };
+        })
+    );
+
+    return images.reduce((acc, { postId, image }) => {
+      acc[postId] = image;
+      return acc;
+    }, {} as { [key: number]: string | null });
+  };
+
+  useEffect(() => {
+    const loadImages = async () => {
+      const imageMap = await fetchProfileImages(posts);
+      setProfileImage(imageMap);
+    };
+
+    if (displayedPosts.length === 0) {
+      const initialPosts = posts.slice(0, postIndex);
+      setDisplayedPosts(initialPosts);
+      loadImages();
+    } else {
+      loadImages();
+    }
+  }, [posts]);
+
   const loadMorePosts = () => {
     const newPosts = posts.slice(postIndex, postIndex + 5);
     setDisplayedPosts((prevPosts) => [...prevPosts, ...newPosts]);
@@ -72,17 +123,6 @@ const PostList: React.FC<PostListProps> = ({
   const toggleExpand = (postId: number) => {
     setExpandedPost(expandedPost === postId ? null : postId);
   };
-
-  // 수정된 부분 start
-  const removeBasePath = (filePath: string) => {
-    const basePathToRemove =
-      "C:\\teamproject\\MovieProjectLast\\frontend\\public\\profile\\";
-    console.log("Original path:", filePath);
-    const newPath = filePath.replace(basePathToRemove, "");
-    console.log("New path:", newPath);
-    return newPath;
-  };
-  // 수정된 부분 end
 
   const handleDeletePost = async (postId: number) => {
     try {
@@ -112,20 +152,17 @@ const PostList: React.FC<PostListProps> = ({
             <div className={styles.postHeader}>
               {renderStars(post.ratingStar)}
             </div>
-            {/* 추가한 부분 start */}
             <div className={styles.profileImage}>
-              {console.log(
-                "Image path:",
-                `/profile/${removeBasePath(post.filePath)}`
-              )}
               <img
-                src={`/profile/${removeBasePath(post.filePath)}`}
+                src={profileImage[post.postId] || '/profile/basic.png'}
                 alt="Profile Image"
                 className={styles.profileImage}
+                layout="responsive" // 이 속성은 필요에 따라 조절
+                width={100} // 적절한 너비
+                height={100} // 적절한 높이
               />
             </div>
-            {/* 추가한 부분 end */}
-            <div className={styles.postNick}>{post.memberNick}</div>
+            <button onClick={() => handleClick(post)} className={styles.postNickButton}>{post.memberNick}</button>
             <div
               className={`${styles.postContent} ${styles.cursorPointer}`}
               onClick={() => toggleExpand(post.postId)}
