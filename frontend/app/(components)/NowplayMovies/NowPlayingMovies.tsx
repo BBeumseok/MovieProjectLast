@@ -157,7 +157,6 @@ export default function NowPlayingMovies() {
                   className={`${styles.likeButton} ${
                     movie.userHasLiked ? styles.liked : ""
                   }`}
-
                   onClick={() => handleLikeClick(movie.id, movie.userHasLiked)} // [7] 좋아요 버튼 클릭 핸들러 적용
                 >
                   {movie.userHasLiked ? <FaHeart /> : <FaRegHeart />}

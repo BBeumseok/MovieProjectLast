@@ -1,3 +1,5 @@
+/* TopLiked.module.css */
+
 .container {
   max-width: 1500px; /* 전체 컨테이너의 최대 너비를 설정 */
   margin: 0 auto;
@@ -11,7 +13,9 @@
 
 .sliderWrapper {
   overflow: hidden;
-  width: calc((200px + 20px * 2) * 5); /* 포스터 5개의 너비와 간격에 맞게 고정 */
+  width: calc(
+    (200px + 20px * 2) * 5
+  ); /* 포스터 5개의 너비와 간격에 맞게 고정 */
   display: flex;
   justify-content: flex-start; /* 포스터들이 중앙에 위치하도록 설정 */
 }
@@ -25,10 +29,6 @@
   box-sizing: border-box;
   flex: 0 0 200px; /* 각 포스터의 너비를 200px로 고정 */
   margin: 20px;
-  margin-top: 20px; /* 포스터 위아래 간격 추가 */
-  margin-bottom: 15px; /* 포스터 위아래 간격 추가 */
-  object-fit: cover;
-  width: 100%;
   transition: transform 0.2s ease, border-image 0.2s ease;
   border: 2px solid transparent;
 }
@@ -43,65 +43,85 @@
   transform: scale(1);
 }
 
-.movieItem:last-child {
-  margin-right: 0; /* 마지막 포스터는 마진 제거 */
+.movieItem:hover {
+  transform: scale(1.1); /* 마우스 오버 시 확대 */
+  z-index: 10; /* 확대된 포스터가 다른 포스터 위에 오도록 설정 */
 }
 
-/* NowPlayingMovies.module.css */
-
-/*@keyframes gradientBorder {*/
-/*         0% {*/
-/*           border-image: linear-gradient(0deg, #ff00ff, #8400ff, #d691ce, #d6d69f) 1;*/
-/*         }*/
-/*         25% {*/
-/*           border-image: linear-gradient(90deg, #ff00ff, #00ffff, #00ff00, #ffff00) 1;*/
-/*         }*/
-/*         50% {*/
-/*           border-image: linear-gradient(180deg, #ff00ff, #00ffff, #00ff00, #ffff00) 1;*/
-/*         }*/
-/*         75% {*/
-/*           border-image: linear-gradient(270deg, #ff00ff, #00ffff, #00ff00, #ffff00) 1;*/
-/*         }*/
-/*         100% {*/
-/*           border-image: linear-gradient(360deg, #ff00ff, #00ffff, #00ff00, #ffff00) 1;*/
-/*         }*/
-/*       }*/
-
+/* 추가된 부분 시작 */
 .movieImg {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    transition: transform 0.2s ease, border-image 0.2s ease;
-    border: 2px solid transparent;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border: 2px solid transparent;
+  transition: transform 0.2s ease, border-image 0.2s ease;
 }
 
 @keyframes gradientBorder {
-    0% {
-        border-image: linear-gradient(0deg, #e61fe6, #3effff, #f684ff, #85a2ff) 1;
-    }
-    25% {
-        border-image: linear-gradient(90deg, #e61fe6, #3effff, #f684ff, #85a2ff) 1;
-    }
-    50% {
-        border-image: linear-gradient(180deg, #e61fe6, #3effff, #f684ff, #85a2ff) 1;
-    }
-    75% {
-        border-image: linear-gradient(270deg, #e61fe6, #3effff, #f684ff, #85a2ff) 1;
-    }
-    100% {
-        border-image: linear-gradient(360deg, #e61fe6, #3effff, #f684ff, #85a2ff) 1;
-    }
+  0% {
+    border-image: linear-gradient(0deg, #e61fe6, #3effff, #f684ff, #85a2ff) 1;
+  }
+  25% {
+    border-image: linear-gradient(90deg, #e61fe6, #3effff, #f684ff, #85a2ff) 1;
+  }
+  50% {
+    border-image: linear-gradient(180deg, #e61fe6, #3effff, #f684ff, #85a2ff) 1;
+  }
+  75% {
+    border-image: linear-gradient(270deg, #e61fe6, #3effff, #f684ff, #85a2ff) 1;
+  }
+  100% {
+    border-image: linear-gradient(360deg, #e61fe6, #3effff, #f684ff, #85a2ff) 1;
+  }
 }
 
 .movieImg:hover {
-    transform: scale(1.1);
-    animation: gradientBorder 4s infinite linear;
+  transform: none; /* 이미지 자체는 별도로 확대하지 않도록 설정 */
+  animation: gradientBorder 4s infinite linear; /* 그라디언트 애니메이션 */
+}
+
+.ratingLikeSection {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.averageRating {
+  font-size: 1rem;
+  color: #ffd700;
+  display: flex;
+  align-items: center;
+}
+
+.likeButton {
+  background-color: transparent;
+  border: none;
+  color: red;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.likeButton:disabled {
+  color: grey;
+  cursor: not-allowed;
+}
+
+.likesCount {
+  font-size: 1rem;
+  margin-left: 0.5rem;
 }
 
 .navButton {
   padding: 10px;
   background-color: transparent;
-  color: #6EBBDBFF; /* 수정: 버튼 텍스트 색상 변경 */
+  color: #6ebbdbff; /* 수정: 버튼 텍스트 색상 변경 */
   border: none;
   cursor: pointer;
   font-size: 2rem;
@@ -115,3 +135,4 @@
 .hidden {
   visibility: hidden;
 }
+/* 추가된 부분 끝 */
