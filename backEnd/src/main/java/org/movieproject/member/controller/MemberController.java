@@ -151,16 +151,20 @@ public class MemberController {
 
     // 회원 삭제
     @DeleteMapping("/delete/{memberNo}")
-    public ResponseEntity<String> deleteMember(@PathVariable("memberNo") Integer memberNo){
-            try {
-                memberService.deleteMember(memberNo);
-                return ResponseEntity.ok("회원정보 삭제에 성공 했습니다.");
-            }catch (MemberService.MemberExistException e) {
-                return ResponseEntity.badRequest().body("회원정보 삭제에 실패하였습니다. !!!");
-            }catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
-            }
+    public ResponseEntity<Map<String, String>> deleteMember(@PathVariable("memberNo") Integer memberNo) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            memberService.deleteMember(memberNo);
+            response.put("message", "회원정보 삭제에 성공 했습니다.");
+            return ResponseEntity.ok(response);
+        } catch (MemberService.MemberExistException e) {
+            response.put("message", "회원정보 삭제에 실패하였습니다. !!!");
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            response.put("message", "서버 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
 
     @GetMapping("/check_auth")
     public ResponseEntity<?> checkAuth() {
