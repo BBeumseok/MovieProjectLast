@@ -48,7 +48,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     @Modifying
     @Transactional
     @Query("UPDATE Member m SET m.memberName = :re_name, " +
-            "m.memberPhone = :re_phone, m.memberNick = :re_nick, m.social = false WHERE m.memberEmail = :member_email")
+            "m.memberPhone = :re_phone, m.memberNick = :re_nick WHERE m.memberEmail = :member_email")
     void socialMember(@Param("re_name") String name, @Param("re_phone") String phone,
                       @Param("re_nick") String nick, @Param("member_email") String email);
 }

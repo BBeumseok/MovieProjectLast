@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.movieproject.likes.entity.Likes;
 import org.movieproject.member.dto.MemberDTO;
 import org.movieproject.member.entity.Member;
+import org.movieproject.member.entity.Role;
 import org.movieproject.member.repository.MemberRepository;
 import org.movieproject.member.service.MemberService;
 import org.movieproject.post.dto.PostDTO;
@@ -60,6 +61,12 @@ public class MemberController {
     public ResponseEntity<?> socialJoin(@Valid @RequestBody MemberDTO memberDTO) {
         log.info("소셜 회원가입 시작 !!!!!!!!!!!!, memberDTO : "+memberDTO);
         try{
+            Optional<Member> OptionalMember = memberRepository.findByMemberEmail(memberDTO.getMemberEmail());
+            OptionalMember.ifPresent(member -> {
+                member.getRoleSet().clear();
+                member.getRoleSet().add(Role.MEMBER);
+                memberRepository.save(member);
+            });
             memberRepository.socialMember(memberDTO.getMemberName(), memberDTO.getMemberPhone(),
                     memberDTO.getMemberNick(), memberDTO.getMemberEmail());
 
