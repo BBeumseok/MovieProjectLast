@@ -55,6 +55,23 @@ public class MemberController {
         return ResponseEntity.ok("회원가입에 성공하였습니다 !!!");
     }
 
+    // 소셜 회원가입
+    @PutMapping("/socialJoin")
+    public ResponseEntity<?> socialJoin(@Valid @RequestBody MemberDTO memberDTO) {
+        log.info("소셜 회원가입 시작 !!!!!!!!!!!!, memberDTO : "+memberDTO);
+        try{
+            memberRepository.socialMember(memberDTO.getMemberName(), memberDTO.getMemberPhone(),
+                    memberDTO.getMemberNick(), memberDTO.getMemberEmail());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "소셜 회원 정보 업데이트가 성공하였습니다 !!!");
+            response.put("member", memberDTO);
+            return ResponseEntity.ok(response);
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body("소셜 회원 정보 업데이트 실패하였습니다 !!!");
+        }
+    }
+
     // 프로필
     @GetMapping("/profile")
     public ResponseEntity<?> getMemberDetails() {

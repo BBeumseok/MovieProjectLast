@@ -157,3 +157,22 @@ export const deleteMemberImage = async (member) => {
     console.error("기존 프로필 사진 삭제 실패 ...", error);
   }
 }
+
+// 서버로 데이터 보내서 회원정보 업데이트
+export const socialMember = async (socialJoinPayload: any) => {
+  try {
+    const { data } = await axiosInstance.put<{ message: string; member: Member }>(
+        "/member/socialJoin",
+        socialJoinPayload,
+    );
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.error("서버 응답 에러:", error.response.data);
+      throw new Error("소셜 회원가입 중 오류가 발생했습니다.");
+    } else {
+      console.error("예상치 못한 에러:", error);
+      throw new Error("예상치 못한 오류가 발생했습니다.");
+    }
+  }
+};

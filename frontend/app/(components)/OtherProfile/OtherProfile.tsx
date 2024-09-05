@@ -23,7 +23,8 @@ const OtherProfile: React.FC = ({otherNick}: OtherProfileProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const fetchImage = useCallback(async (memberNo: number): Promise<string> => {
-        await getMemberImage(memberNo);
+        const image = await getMemberImage(memberNo);
+        return image;
     }, []);
 
     useEffect(() => {

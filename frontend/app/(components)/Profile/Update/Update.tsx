@@ -83,7 +83,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
         }
     };
     // 프사 삭제
-    const handleProfileImageDelete = async (member) => {
+    const handleProfileImageDelete = async (member: Member) => {
         console.log("기존 프로필 사진 삭제 시작 !!!");
         await deleteMemberImage(member);
         setProfileImagePath("/profile/basic.png");
@@ -305,7 +305,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
                 {errors.confirmNewPassword && (
                     <span style={{color: "red"}}>{errors.confirmNewPassword}</span>)}
 
-                <input type="text" name="memberName" value={updateForm.memberName}
+                <input type="text" name="memberName" value={''}
                        onChange={handleChange} placeholder="이름" className={styles.input} required/>
 
                 <input type="text" name="memberNick" value={updateForm.memberNick}

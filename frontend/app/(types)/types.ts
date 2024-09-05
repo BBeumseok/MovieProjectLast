@@ -38,6 +38,13 @@ export interface UpdateForm {
     confirmNewPassword: string;
 }
 
+export interface SocialJoinForm {
+    memberEmail: string;
+    memberName: string;
+    memberPhone: string;
+    memberNick: string;
+}
+
 export interface Errors {
     currentPassword?: string;
     newPassword?: string;
