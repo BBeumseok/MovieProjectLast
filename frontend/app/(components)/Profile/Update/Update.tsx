@@ -305,7 +305,7 @@ const Update: React.FC<UpdateProps> = ({ member, setMember,
                 {errors.confirmNewPassword && (
                     <span style={{color: "red"}}>{errors.confirmNewPassword}</span>)}
 
-                <input type="text" name="memberName" value={''}
+                <input type="text" name="memberName" value={updateForm.memberName}
                        onChange={handleChange} placeholder="이름" className={styles.input} required/>
 
                 <input type="text" name="memberNick" value={updateForm.memberNick}
